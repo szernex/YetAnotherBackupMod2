@@ -1,0 +1,21 @@
+[
+{
+  "modid": "YABM",
+  "name": "Yet Another Backup Mod",
+  "description": "Yet another Minecraft Backup Mod",
+  "version": "${mod_version}",
+  "mcversion": "${mc_version}",
+  "url": "https://github.com/szernex/YetAnotherBackupMod",
+  "updateUrl": "",
+  "authorList": [
+    "Szernex"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

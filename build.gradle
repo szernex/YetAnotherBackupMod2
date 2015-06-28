@@ -1,0 +1,83 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.propertiesFile = "build.properties"
+
+ext.configFile = file propertiesFile
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.mc_version}-${config.mod_version}.${config.build_number}"
+group= "org.szernex.yabm"
+archivesBaseName = "YABM"
+
+minecraft {
+    version = config.mc_version + "-" + config.forge_version + "-" + config.mc_version
+    runDir = "eclipse"
+
+    replaceIn "Reference.java"
+    replace "@VERSION@", config.mod_version + "." + config.build_number
+
+    srgExtra "PK:org/apache/commons/net org/szernex/yabm/commons-net"
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    shade "commons-net:commons-net:3.3"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude "META-INF", "META-INF/**"
+        }
+    }
+}
+
+idea {
+	module	{
+		inheritOutputDirs = true
+	}
+}
