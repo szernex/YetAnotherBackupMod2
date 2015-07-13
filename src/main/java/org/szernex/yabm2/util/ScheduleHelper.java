@@ -1,6 +1,6 @@
-package org.szernex.yabm.util;
+package org.szernex.yabm2.util;
 
-import org.szernex.yabm.handler.ConfigHandler;
+import org.szernex.yabm2.handler.ConfigHandler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

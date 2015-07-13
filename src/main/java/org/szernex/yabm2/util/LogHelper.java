@@ -1,8 +1,8 @@
-package org.szernex.yabm.util;
+package org.szernex.yabm2.util;
 
 import cpw.mods.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
-import org.szernex.yabm.Reference;
+import org.szernex.yabm2.Reference;
 
 public class LogHelper
 {

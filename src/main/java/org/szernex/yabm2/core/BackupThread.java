@@ -1,9 +1,11 @@
-package org.szernex.yabm.core;
+package org.szernex.yabm2.core;
 
 import net.minecraft.world.WorldServer;
-import org.szernex.yabm.util.LogHelper;
-import org.szernex.yabm.util.WorldHelper;
+import org.szernex.yabm2.util.FileHelper;
+import org.szernex.yabm2.util.LogHelper;
+import org.szernex.yabm2.util.WorldHelper;
 
+import java.nio.file.FileSystems;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -37,10 +39,12 @@ public class BackupThread extends Thread
 			return;
 		}
 
+		long start_time = System.currentTimeMillis();
+
 		// determine if persistent backup
 
 		// gather files
-		//FileHelper.gatherFiles(FileSystems.getDefault().getPath("."));
+		FileHelper.gatherFiles(FileSystems.getDefault().getPath("."));
 
 		// create archive
 
@@ -53,5 +57,7 @@ public class BackupThread extends Thread
 		LogHelper.info("Releasing backup lock");
 		LogHelper.info("TASK FINISHED");
 		backupLock.unlock();
+
+		LogHelper.info("Task ran for %d milliseconds", (System.currentTimeMillis() - start_time));
 	}
 }

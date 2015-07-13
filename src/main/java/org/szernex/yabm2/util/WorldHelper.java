@@ -1,4 +1,4 @@
-package org.szernex.yabm.util;
+package org.szernex.yabm2.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;

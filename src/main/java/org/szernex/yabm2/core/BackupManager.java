@@ -1,11 +1,11 @@
-package org.szernex.yabm.core;
+package org.szernex.yabm2.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.world.WorldServer;
-import org.szernex.yabm.util.LogHelper;
-import org.szernex.yabm.util.ScheduleHelper;
-import org.szernex.yabm.util.WorldHelper;
+import org.szernex.yabm2.util.LogHelper;
+import org.szernex.yabm2.util.ScheduleHelper;
+import org.szernex.yabm2.util.WorldHelper;
 
 import java.util.Date;
 import java.util.HashMap;
