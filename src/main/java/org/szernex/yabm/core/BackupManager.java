@@ -71,10 +71,9 @@ public class BackupManager
 		HashMap<WorldServer, Boolean> save_flags = WorldHelper.disableWorldSaving();
 
 		// start new backup thread
-		LogHelper.info("Starting backup thread");
-
 		BackupThread backup_thread = new BackupThread();
 
+		LogHelper.info("Starting backup thread");
 		backup_thread.setWorldSaveFlags(save_flags);
 		backup_thread.start();
 
