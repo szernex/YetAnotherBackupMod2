@@ -18,7 +18,7 @@ public class BackupManager
 	private boolean schedule()
 	{
 		nextSchedule = ScheduleHelper.getNextSchedule();
-		nextSchedule = new Date(System.currentTimeMillis() + 5000); // --------------- DEBUGGING
+		nextSchedule = new Date(System.currentTimeMillis() + 10000); // --------------- DEBUGGING
 
 		if (nextSchedule == null)
 		{
