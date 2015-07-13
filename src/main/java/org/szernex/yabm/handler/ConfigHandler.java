@@ -11,8 +11,10 @@ public class ConfigHandler
 {
 	private static Configuration configuration;
 
-	public static String[] whitelist = new String[]{"*"};
-	public static String[] blacklist = new String[]{"logs"};
+	public static String[] whitelist =      new String[]{"*"};
+	public static String[] blacklist =      new String[]{"logs"};
+	public static int backupInterval =      180;
+	public static String[] backupSchedule = new String[]{};
 
 	public static void init(File file)
 	{
@@ -34,6 +36,8 @@ public class ConfigHandler
 
 		whitelist = configuration.getStringList("whitelist", category, whitelist, "List of all the files to INCLUDE in the backup.");
 		blacklist = configuration.getStringList("blacklist", category, blacklist, "List of all the files to EXCLUDE from the backup. Overwrites the whitelist.");
+		backupInterval = configuration.getInt("backupInterval", category, backupInterval, 0, Integer.MAX_VALUE, "Interval for backups in minutes. Useful for singleplayer.\nSet this to 0 to enable backupSchedule instead.");
+		backupSchedule = configuration.getStringList("backupSchedule", category, backupSchedule, "The times for when to do backups in 24h format. Useful for servers.\nIf backupInterval is >0 then this setting has no effect.");
 
 		if (configuration.hasChanged())
 		{
