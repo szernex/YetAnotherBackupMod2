@@ -108,12 +108,13 @@ public class BackupThread extends Thread
 
 
 		// consolidate old backups
+		BackupManagingHelper.consolidateBackups();
 
 
 		// finish up
 		finish();
 
-		LogHelper.info("Task ran for %d ms", (System.currentTimeMillis() - start_time));
+		LogHelper.info("Task ran for %dms", (System.currentTimeMillis() - start_time));
 	}
 
 	private void finish()

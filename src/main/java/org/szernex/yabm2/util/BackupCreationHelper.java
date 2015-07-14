@@ -19,7 +19,8 @@ import java.util.zip.ZipOutputStream;
 public class BackupCreationHelper
 {
 	public static final String FILENAME_SEPARATOR = "_";
-	public static final String DATETIMEFORMAT_PATTERN = "YYYY-MM-dd" + FILENAME_SEPARATOR + "HH-mm-ss";
+	public static final String TIMESTAMP_PATTERN = "YYYY-MM-dd" + FILENAME_SEPARATOR + "HH-mm-ss";
+	public static final String TIMESTAMP_REGEX_PATTERN = "\\d{4}-\\d{2}-\\d{2}" + FILENAME_SEPARATOR + "\\d{2}-\\d{2}-\\d{2}";
 
 	protected static HashSet<PathMatcher> blacklistMatchers = new HashSet<>();
 
@@ -72,10 +73,12 @@ public class BackupCreationHelper
 
 	public static void init()
 	{
+		LogHelper.info("Initializing BackupCreationHelper");
+
 		String separator = FileSystems.getDefault().getSeparator();
 		blacklistMatchers.clear();
 		// exclude saves directory by default in case of this being a single player instance, only the current save will get included
-		blacklistMatchers.add(FileSystems.getDefault().getPathMatcher("regex:.*\\" + separator + "saves\\" + separator + ".*"));
+		blacklistMatchers.add(FileSystems.getDefault().getPathMatcher("regex:^.*\\" + separator + "?saves\\" + separator + ".*"));
 
 		HashSet<String> patterns = new HashSet<>(Arrays.asList(ConfigHandler.blacklist)); // to make sure there are no duplicate patterns
 
@@ -116,6 +119,7 @@ public class BackupCreationHelper
 		ZipOutputStream zip = new ZipOutputStream(output);
 		HashSet<Path> files = new HashSet<>(gatherFiles(root, true));
 
+		LogHelper.debug("Adding world save");
 		files.addAll(gatherFiles(world_path, false));
 
 		zip.setMethod(ZipOutputStream.DEFLATED);
@@ -153,10 +157,20 @@ public class BackupCreationHelper
 	public static String generateArchiveFileName(boolean is_persistent)
 	{
 		String prefix = ConfigHandler.backupPrefix + FILENAME_SEPARATOR;
-		String persistent = (is_persistent ? "persistent" + FILENAME_SEPARATOR : "");
 		String world_name = DimensionManager.getCurrentSaveRootDirectory().getName() + FILENAME_SEPARATOR;
-		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIMEFORMAT_PATTERN));
+		String persistent = (is_persistent ? "persistent" + FILENAME_SEPARATOR : "");
+		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(TIMESTAMP_PATTERN));
 
 		return String.format("%s%s%s%s.zip", prefix, world_name, persistent, timestamp).replace(" ", FILENAME_SEPARATOR);
+	}
+
+	public static String generateFileNameRegex()
+	{
+		String prefix = ConfigHandler.backupPrefix + FILENAME_SEPARATOR;
+		String world_name = DimensionManager.getCurrentSaveRootDirectory().getName() + FILENAME_SEPARATOR;
+		String persistent = "(persistent" + FILENAME_SEPARATOR + ")?";
+		String timestamp = TIMESTAMP_REGEX_PATTERN;
+
+		return String.format("%s%s%s%s\\.zip", prefix, world_name, persistent, timestamp).replace(" ", FILENAME_SEPARATOR);
 	}
 }
