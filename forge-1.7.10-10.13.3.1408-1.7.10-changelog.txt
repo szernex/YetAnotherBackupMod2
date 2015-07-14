@@ -3705,7 +3705,7 @@ Build 1.8-11.14.0.1296:
 		
 		Some notes:
 		Almost all int x, int y, int z parameters have been changed to BlockPos class
-		ForgeDirection has been removed, replaced by net.minecraft.util.EnumFacing.
+		ForgeDirection has been removed, replaced by net.minecraft.org.szernex.yabm2.util.EnumFacing.
 		All FML classes have moved from packet cpw.mods.fml to net.minecraftforge.fml
 		Fluid Rendering has been disabled for the time being, to be re-evaulated and a test mod created for it.
 		Minecraft now uses a Model based system for rendering blocks and Items. The intention is to expand the model format to better suit modder's needed once it is evaulated.

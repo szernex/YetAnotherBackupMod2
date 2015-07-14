@@ -1,11 +1,11 @@
 [
 {
-  "modid": "YABM",
-  "name": "Yet Another Backup Mod",
-  "description": "Yet another Minecraft Backup Mod",
+  "modid": "YABM2",
+  "name": "Yet Another Backup Mod 2",
+  "description": "Yet another Minecraft Backup Mod, version 2",
   "version": "${mod_version}",
   "mcversion": "${mc_version}",
-  "url": "https://github.com/szernex/YetAnotherBackupMod",
+  "url": "https://github.com/szernex/YetAnotherBackupMod2",
   "updateUrl": "",
   "authorList": [
     "Szernex"
