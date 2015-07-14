@@ -2,22 +2,20 @@ package org.szernex.yabm2.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.world.WorldServer;
+import org.szernex.yabm2.util.BackupCreationHelper;
 import org.szernex.yabm2.util.LogHelper;
 import org.szernex.yabm2.util.ScheduleHelper;
 import org.szernex.yabm2.util.WorldHelper;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class BackupManager
 {
-	private Date nextSchedule = null;
 	private long nextScheduleTimestamp;
 
 	private boolean schedule()
 	{
-		nextSchedule = ScheduleHelper.getNextSchedule();
+		Date nextSchedule = ScheduleHelper.getNextSchedule();
 		nextSchedule = new Date(System.currentTimeMillis() + 5000); // --------------- DEBUGGING
 
 		if (nextSchedule == null)
@@ -34,16 +32,19 @@ public class BackupManager
 
 	public void init()
 	{
-		LogHelper.info("Initializing BackupManager"); //DEBUG
+		LogHelper.info("Initializing BackupManager");
+
+		BackupCreationHelper.init();
 
 		nextScheduleTimestamp = Long.MAX_VALUE;
 
-		schedule();
+		if (!schedule())
+			LogHelper.warn("BackupManager failed to initialize, backups will not be run!");
 	}
 
 	public void stop()
 	{
-		LogHelper.info("Stopping BackupManager"); //DEBUG
+		LogHelper.info("Stopping BackupManager");
 
 	}
 
@@ -68,13 +69,12 @@ public class BackupManager
 		LogHelper.info("Backup starting, prepare for lag");
 
 		// turn off auto-save
-		HashMap<WorldServer, Boolean> save_flags = WorldHelper.disableWorldSaving();
+		WorldHelper.disableWorldSaving();
 
 		// start new backup thread
 		BackupThread backup_thread = new BackupThread();
 
 		LogHelper.info("Starting backup thread");
-		backup_thread.setWorldSaveFlags(save_flags);
 		backup_thread.start();
 
 		// re-schedule next backup

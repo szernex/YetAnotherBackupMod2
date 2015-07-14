@@ -22,17 +22,12 @@ public class BackupCreationHelper
 	public static final String TIMESTAMP_PATTERN = "YYYY-MM-dd" + FILENAME_SEPARATOR + "HH-mm-ss";
 	public static final String TIMESTAMP_REGEX_PATTERN = "\\d{4}-\\d{2}-\\d{2}" + FILENAME_SEPARATOR + "\\d{2}-\\d{2}-\\d{2}";
 
-	protected static HashSet<PathMatcher> blacklistMatchers = new HashSet<>();
+	private static final HashSet<PathMatcher> blacklistMatchers = new HashSet<>();
 
 	private static class BackupFileVisitor extends SimpleFileVisitor<Path>
 	{
 		private HashSet<Path> files = new HashSet<>();
 		private Set<PathMatcher> matchers = new HashSet<>();
-
-		public BackupFileVisitor()
-		{
-			this(null);
-		}
 
 		public BackupFileVisitor(Set<PathMatcher> blacklist_matchers)
 		{
@@ -88,10 +83,10 @@ public class BackupCreationHelper
 		}
 	}
 
-	public static Set<Path> gatherFiles(Path root, boolean use_blacklist)
+	public static Set<Path> gatherFiles(Path root, Set<PathMatcher> blacklist_matchers)
 	{
 		HashSet<Path> output = new HashSet<>();
-		BackupFileVisitor fileVisitor = new BackupFileVisitor((use_blacklist ? blacklistMatchers : null));
+		BackupFileVisitor fileVisitor = new BackupFileVisitor(blacklist_matchers);
 
 		try
 		{
@@ -107,20 +102,20 @@ public class BackupCreationHelper
 		return output;
 	}
 
-	public static boolean createZipArchive(Path target, Path root, Path world_path) throws IOException
+	public static void createZipArchive(Path target, Path root, Path world_path) throws IOException
 	{
 		if (Files.exists(target))
 		{
 			LogHelper.error("Cannot create archive %s: file already exists", target);
-			return false;
+			throw new IOException("Target file already exists");
 		}
 
 		FileOutputStream output = new FileOutputStream(target.toFile());
 		ZipOutputStream zip = new ZipOutputStream(output);
-		HashSet<Path> files = new HashSet<>(gatherFiles(root, true));
+		HashSet<Path> files = new HashSet<>(gatherFiles(root, blacklistMatchers));
 
 		LogHelper.debug("Adding world save");
-		files.addAll(gatherFiles(world_path, false));
+		files.addAll(gatherFiles(world_path, null));
 
 		zip.setMethod(ZipOutputStream.DEFLATED);
 		zip.setLevel(ConfigHandler.compressionLevel);
@@ -150,8 +145,6 @@ public class BackupCreationHelper
 
 		zip.close();
 		output.close();
-
-		return true;
 	}
 
 	public static String generateArchiveFileName(boolean is_persistent)

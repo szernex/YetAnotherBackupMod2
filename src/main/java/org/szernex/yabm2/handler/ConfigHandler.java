@@ -26,8 +26,9 @@ public class ConfigHandler
 		if (configuration == null)
 		{
 			configuration = new Configuration(file);
-			loadConfig();
 		}
+
+		loadConfig();
 	}
 
 	public static void loadConfig()

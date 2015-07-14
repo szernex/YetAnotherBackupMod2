@@ -1,6 +1,5 @@
 package org.szernex.yabm2.core;
 
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import org.szernex.yabm2.handler.ConfigHandler;
 import org.szernex.yabm2.util.BackupCreationHelper;
@@ -12,19 +11,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BackupThread extends Thread
 {
 	public static final ReentrantLock backupLock = new ReentrantLock();
-
-	private HashMap<WorldServer, Boolean> worldSaveFlags = null;
-
-	public void setWorldSaveFlags(HashMap<WorldServer, Boolean> worldSaveFlags)
-	{
-		this.worldSaveFlags = worldSaveFlags;
-	}
 
 	@Override
 	public void run()
@@ -37,12 +28,7 @@ public class BackupThread extends Thread
 		if (!backupLock.tryLock())
 		{
 			LogHelper.error("Unable to acquire backup lock, aborting");
-			return;
-		}
-
-		if (worldSaveFlags == null)
-		{
-			LogHelper.error("World saving flags have not been set, aborting backup");
+			finish();
 			return;
 		}
 
@@ -120,7 +106,7 @@ public class BackupThread extends Thread
 	private void finish()
 	{
 		// turn auto-save on
-		WorldHelper.enableWorldSaving(worldSaveFlags);
+		WorldHelper.enableWorldSaving();
 
 
 		// release lock

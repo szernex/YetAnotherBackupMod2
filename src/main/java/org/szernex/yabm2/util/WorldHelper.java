@@ -10,14 +10,16 @@ import java.util.Map;
 
 public class WorldHelper
 {
-	public static HashMap<WorldServer, Boolean> disableWorldSaving()
+	private static HashMap<WorldServer, Boolean> saveFlags = null;
+
+	public static void disableWorldSaving()
 	{
 		LogHelper.info("Saving worlds and turning world auto-save off");
 
 		MinecraftServer server = MinecraftServer.getServer();
 		ServerConfigurationManager server_config_manager = MinecraftServer.getServer().getConfigurationManager();
 		int server_count = server.worldServers.length;
-		HashMap<WorldServer, Boolean> save_flags = new HashMap<>();
+		saveFlags = new HashMap<>();
 
 		server_config_manager.saveAllPlayerData();
 		LogHelper.info("Player data saved");
@@ -25,7 +27,7 @@ public class WorldHelper
 		for (int i = 0; i < server_count; i++)
 		{
 			WorldServer world_server = server.worldServers[i];
-			save_flags.put(world_server, world_server.levelSaving);
+			saveFlags.put(world_server, world_server.levelSaving);
 
 			world_server.levelSaving = false;
 
@@ -44,18 +46,26 @@ public class WorldHelper
 		}
 
 		LogHelper.info("Worlds saved");
-
-		return save_flags;
+		LogHelper.info("World auto-save turned off");
 	}
 
-	public static void enableWorldSaving(HashMap<WorldServer, Boolean> save_flags)
+	public static void enableWorldSaving()
 	{
+		if (saveFlags == null)
+		{
+			LogHelper.info("Save flags have not been set, world saving is probably not disabled, skipping");
+			return;
+		}
+
 		LogHelper.info("Turning auto-save back on");
 
-		for (Map.Entry<WorldServer, Boolean> entry : save_flags.entrySet())
+		for (Map.Entry<WorldServer, Boolean> entry : saveFlags.entrySet())
 		{
 			entry.getKey().levelSaving = entry.getValue();
 			LogHelper.debug("Set level-saving for %s to %b", entry.getKey(), entry.getValue());
 		}
+
+		LogHelper.info("World auto-save turned on");
+		saveFlags = null;
 	}
 }
