@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import org.szernex.yabm2.core.BackupManager;
 import org.szernex.yabm2.handler.ConfigHandler;
-import org.szernex.yabm2.util.FileHelper;
+import org.szernex.yabm2.util.BackupCreationHelper;
 import org.szernex.yabm2.util.LogHelper;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, acceptableRemoteVersions = "*")
@@ -31,7 +31,7 @@ public class YABM
 	{
 		backupManager.init();
 		FMLCommonHandler.instance().bus().register(backupManager);
-		FileHelper.init();
+		BackupCreationHelper.init();
 	}
 
 	@Mod.EventHandler

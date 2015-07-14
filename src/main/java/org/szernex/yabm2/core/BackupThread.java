@@ -3,7 +3,8 @@ package org.szernex.yabm2.core;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import org.szernex.yabm2.handler.ConfigHandler;
-import org.szernex.yabm2.util.FileHelper;
+import org.szernex.yabm2.util.BackupCreationHelper;
+import org.szernex.yabm2.util.BackupManagingHelper;
 import org.szernex.yabm2.util.LogHelper;
 import org.szernex.yabm2.util.WorldHelper;
 
@@ -30,6 +31,7 @@ public class BackupThread extends Thread
 	{
 		LogHelper.info("BACKUPTASK IS RUNNING");
 
+
 		// acquire lock
 		LogHelper.info("Trying to acquire backup lock");
 		if (!backupLock.tryLock())
@@ -46,39 +48,67 @@ public class BackupThread extends Thread
 
 		long start_time = System.currentTimeMillis();
 
-		// determine if persistent backup
 
-		// initialize folder structure if necessary
-		Path root = Paths.get("");
-		Path target_dir = root.toAbsolutePath().resolve(Paths.get(ConfigHandler.backupPath)).normalize();
+		// prepare directory structures
+		LogHelper.info("Preparing directories");
+
+		Path backup_dir = Paths.get(ConfigHandler.backupPath).toAbsolutePath().normalize();
+		Path persistent_dir = Paths.get(ConfigHandler.persistentPath).toAbsolutePath().normalize();
 
 		try
 		{
-			Files.createDirectories(target_dir);
+			LogHelper.info("Preparing backup directory: " + backup_dir);
+			Files.createDirectories(backup_dir);
+
+
+			if (ConfigHandler.persistentBackups)
+			{
+				LogHelper.info("Preparing persistent directory: " + persistent_dir);
+				Files.createDirectories(persistent_dir);
+			}
 		}
 		catch (IOException ex)
 		{
-			LogHelper.error("Error while trying to create backup directory structure: %s. Aborting backup.", ex.getMessage());
+			LogHelper.error("Could not create directory: %s. Aborting backup.", ex.getMessage());
 			ex.printStackTrace();
 			finish();
+			return;
 		}
 
+
+		// determine if persistent backup
+		Path target_dir = backup_dir;
+		boolean persistent = false;
+
+		if (ConfigHandler.persistentBackups && BackupManagingHelper.isPersistent())
+		{
+			target_dir = persistent_dir;
+			persistent = true;
+		}
+
+
 		// create backup archive
-		Path target_file = target_dir.resolve(FileHelper.generateArchiveFileName());
+		Path root = Paths.get("");
+		Path target_file = target_dir.resolve(BackupCreationHelper.generateArchiveFileName(persistent));
 		Path world_path = root.resolve(DimensionManager.getCurrentSaveRootDirectory().toString()).normalize();
+
+		LogHelper.info("Backup info: Root: %s - World directory: %s - Target backup file: %s", root.toAbsolutePath(), world_path, target_file);
 
 		try
 		{
-			FileHelper.createZipArchive(target_file, root, world_path);
+			BackupCreationHelper.createZipArchive(target_file, root, world_path);
 		}
 		catch (IOException ex)
 		{
 			LogHelper.error("Error creating backup archive: %s", ex.getMessage());
 			ex.printStackTrace();
 			finish();
+			return;
 		}
 
+
 		// consolidate old backups
+
 
 		// finish up
 		finish();
@@ -90,6 +120,7 @@ public class BackupThread extends Thread
 	{
 		// turn auto-save on
 		WorldHelper.enableWorldSaving(worldSaveFlags);
+
 
 		// release lock
 		LogHelper.info("Releasing backup lock");

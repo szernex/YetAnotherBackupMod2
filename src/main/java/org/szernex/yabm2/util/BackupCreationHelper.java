@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class FileHelper
+public class BackupCreationHelper
 {
 	public static final String FILENAME_SEPARATOR = "_";
 	public static final String DATETIMEFORMAT_PATTERN = "YYYY-MM-dd" + FILENAME_SEPARATOR + "HH-mm-ss";
@@ -55,7 +55,7 @@ public class FileHelper
 				}
 			}
 
-			LogHelper.info("Including " + file);
+			LogHelper.trace("Including " + file);
 			files.add(file);
 
 			return FileVisitResult.CONTINUE;
@@ -150,12 +150,13 @@ public class FileHelper
 		return true;
 	}
 
-	public static String generateArchiveFileName()
+	public static String generateArchiveFileName(boolean is_persistent)
 	{
-		String prefix = ConfigHandler.backupPrefix;
-		String world_name = DimensionManager.getCurrentSaveRootDirectory().getName();
+		String prefix = ConfigHandler.backupPrefix + FILENAME_SEPARATOR;
+		String persistent = (is_persistent ? "persistent" + FILENAME_SEPARATOR : "");
+		String world_name = DimensionManager.getCurrentSaveRootDirectory().getName() + FILENAME_SEPARATOR;
 		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIMEFORMAT_PATTERN));
 
-		return String.format("%2$s%1$s%3$s%1$s%4$s.zip", FILENAME_SEPARATOR, prefix, world_name, timestamp).replace(" ", FILENAME_SEPARATOR);
+		return String.format("%s%s%s%s.zip", prefix, world_name, persistent, timestamp).replace(" ", FILENAME_SEPARATOR);
 	}
 }
