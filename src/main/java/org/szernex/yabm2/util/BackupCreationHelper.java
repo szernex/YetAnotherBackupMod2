@@ -72,6 +72,7 @@ public class BackupCreationHelper
 
 		String separator = FileSystems.getDefault().getSeparator();
 		blacklistMatchers.clear();
+
 		// exclude saves directory by default in case of this being a single player instance, only the current save will get included
 		blacklistMatchers.add(FileSystems.getDefault().getPathMatcher("regex:^.*\\" + separator + "?saves\\" + separator + ".*"));
 

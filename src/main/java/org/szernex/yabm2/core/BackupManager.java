@@ -48,6 +48,11 @@ public class BackupManager
 
 	}
 
+	public void startBackup()
+	{
+		nextScheduleTimestamp = System.currentTimeMillis() + 1;
+	}
+
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event)
 	{

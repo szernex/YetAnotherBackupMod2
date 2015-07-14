@@ -23,12 +23,12 @@ public class ConfigHandler
 
 	public static void init(File file)
 	{
-		if (configuration == null)
+		if (file != null)
 		{
 			configuration = new Configuration(file);
-		}
 
-		loadConfig();
+			loadConfig();
+		}
 	}
 
 	public static void loadConfig()
