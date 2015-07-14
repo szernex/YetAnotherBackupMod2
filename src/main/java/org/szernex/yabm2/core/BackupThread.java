@@ -57,13 +57,13 @@ public class BackupThread extends Thread
 
 		try
 		{
-			LogHelper.info("Preparing backup directory: " + backup_dir);
+			LogHelper.debug("Preparing backup directory: " + backup_dir);
 			Files.createDirectories(backup_dir);
 
 
 			if (ConfigHandler.persistentBackups)
 			{
-				LogHelper.info("Preparing persistent directory: " + persistent_dir);
+				LogHelper.debug("Preparing persistent directory: " + persistent_dir);
 				Files.createDirectories(persistent_dir);
 			}
 		}

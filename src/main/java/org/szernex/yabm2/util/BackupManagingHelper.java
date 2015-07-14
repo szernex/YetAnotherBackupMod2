@@ -67,8 +67,8 @@ public class BackupManagingHelper
 		BackupFileVisitor fileVisitor = new BackupFileVisitor(pattern);
 		HashSet<Path> files = new HashSet<>();
 
-		LogHelper.info("Checking directories for backups created today: %s %s", backup_dir, persistent_dir);
-		LogHelper.info("Pattern used: " + pattern);
+		LogHelper.debug("Checking directories for backups created today: %s %s", backup_dir, persistent_dir);
+		LogHelper.debug("Pattern used: " + pattern);
 
 		try
 		{
