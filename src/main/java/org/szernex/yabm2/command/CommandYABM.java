@@ -28,7 +28,7 @@ public class CommandYABM extends CommandBase
 	@Override
 	public String getCommandName()
 	{
-		return "yabm";
+		return "yabm2";
 	}
 
 	@Override
