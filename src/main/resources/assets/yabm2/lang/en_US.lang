@@ -1,0 +1,16 @@
+yabm2.backup.error.thread_still_running=Previous backup has not finished yet, skipping to next scheduled backup.
+yabm2.backup.error.no_schedule=No valid backup schedule found, check config file!
+yabm2.backup.error.lock_failed=Could not acquire backup-lock, aborting!
+yabm2.backup.error.dir_creation_failed=Could not create backup directory, aborting!
+yabm2.backup.error.archive_creation_failed=Could not create backup archive!
+yabm2.backup.general.backup_starting=Backup starting, expect some lag.
+yabm2.backup.general.next_backup=Next scheduled backup: %s.
+yabm2.backup.general.backup_finished=Backup finished.
+yabm2.backup.general.autosave_off=Worlds saved and auto-save turned off.
+yabm2.backup.general.autosave_on=World auto-save turned on.
+
+commands.yabm2.general.usage=Usage: /yabm <startbackup|reloadconfig>
+commands.yabm2.error.invalid_key=Invalid command.
+commands.yabm2.reloadconfig.error.thread_running=A backup seems to be running, can't reload config now!
+commands.yabm2.reloadconfig.success=Config successfully reloaded.
+commands.yabm2.startbackup.started=%s manually started a backup.

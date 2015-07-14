@@ -2,10 +2,7 @@ package org.szernex.yabm2.core;
 
 import net.minecraftforge.common.DimensionManager;
 import org.szernex.yabm2.handler.ConfigHandler;
-import org.szernex.yabm2.util.BackupCreationHelper;
-import org.szernex.yabm2.util.BackupManagingHelper;
-import org.szernex.yabm2.util.LogHelper;
-import org.szernex.yabm2.util.WorldHelper;
+import org.szernex.yabm2.util.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +25,7 @@ public class BackupThread extends Thread
 		if (!backupLock.tryLock())
 		{
 			LogHelper.error("Unable to acquire backup lock, aborting");
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.lock_failed");
 			finish();
 			return;
 		}
@@ -57,6 +55,7 @@ public class BackupThread extends Thread
 		{
 			LogHelper.error("Could not create directory: %s. Aborting backup.", ex.getMessage());
 			ex.printStackTrace();
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.dir_creation_failed");
 			finish();
 			return;
 		}
@@ -88,6 +87,7 @@ public class BackupThread extends Thread
 		{
 			LogHelper.error("Error creating backup archive: %s", ex.getMessage());
 			ex.printStackTrace();
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.archive_creation_failed", ex.getMessage());
 			finish();
 			return;
 		}
@@ -112,6 +112,7 @@ public class BackupThread extends Thread
 		// release lock
 		LogHelper.info("Releasing backup lock");
 		LogHelper.info("TASK FINISHED");
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.backup_finished");
 		backupLock.unlock();
 	}
 }

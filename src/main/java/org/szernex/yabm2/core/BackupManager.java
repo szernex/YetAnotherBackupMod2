@@ -2,12 +2,10 @@ package org.szernex.yabm2.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import org.szernex.yabm2.util.BackupCreationHelper;
-import org.szernex.yabm2.util.LogHelper;
-import org.szernex.yabm2.util.ScheduleHelper;
-import org.szernex.yabm2.util.WorldHelper;
+import org.szernex.yabm2.util.*;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class BackupManager
 {
@@ -15,17 +13,23 @@ public class BackupManager
 
 	private boolean schedule()
 	{
-		Date nextSchedule = ScheduleHelper.getNextSchedule();
-		nextSchedule = new Date(System.currentTimeMillis() + 5000); // --------------- DEBUGGING
+		nextScheduleTimestamp = Long.MAX_VALUE;
+
+		ZonedDateTime nextSchedule = ScheduleHelper.getNextSchedule();
 
 		if (nextSchedule == null)
 		{
 			LogHelper.error("No valid backup schedule found, check configuration!");
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.no_schedule");
 			return false;
 		}
 
 		nextScheduleTimestamp = nextSchedule.toInstant().toEpochMilli();
-		LogHelper.info("Next scheduled backup: %s %d", nextSchedule, nextScheduleTimestamp);
+
+		String format = nextSchedule.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss '['z']'"));
+
+		LogHelper.info("Next scheduled backup: %s", format);
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.next_backup", format);
 
 		return true;
 	}
@@ -66,12 +70,14 @@ public class BackupManager
 		if (BackupThread.backupLock.isLocked())
 		{
 			LogHelper.warn("Skipping to next scheduled backup because previous thread hasn't finished yet");
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.thread_still_running");
 			schedule();
 			return;
 		}
 
 		// start backup
 		LogHelper.info("Backup starting, prepare for lag");
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.backup_starting");
 
 		// turn off auto-save
 		WorldHelper.disableWorldSaving();

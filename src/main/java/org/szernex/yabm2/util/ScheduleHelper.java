@@ -2,25 +2,20 @@ package org.szernex.yabm2.util;
 
 import org.szernex.yabm2.handler.ConfigHandler;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 public class ScheduleHelper
 {
-	public static Date getNextSchedule()
+	public static ZonedDateTime getNextSchedule()
 	{
-		Date output;
+		ZonedDateTime next_schedule;
 
 		// Determine type of schedule
 		if (ConfigHandler.backupInterval > 0) // Interval
 		{
-			output = new Date(System.currentTimeMillis() + (ConfigHandler.backupInterval * 60 * 1000));
+			next_schedule = ZonedDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis() + (ConfigHandler.backupInterval * 60 * 1000)), ZoneId.systemDefault());
 		}
 		else // Schedule
 		{
@@ -32,7 +27,6 @@ public class ScheduleHelper
 			LocalTime now = LocalTime.now();
 			LocalTime next_time = null;
 			LocalDate day = LocalDate.now();
-			LocalDateTime next_schedule;
 			TreeSet<LocalTime> times = new TreeSet<>();
 
 			for (String s : ConfigHandler.backupSchedule)
@@ -40,12 +34,8 @@ public class ScheduleHelper
 				times.add(LocalTime.parse(s, DateTimeFormatter.ofPattern("H:mm")));
 			}
 
-			Iterator<LocalTime> iterator = times.iterator();
-
-			while (iterator.hasNext()) // try to find next scheduled time for today
+			for (LocalTime t : times) // try to find next scheduled time for today
 			{
-				LocalTime t = iterator.next();
-
 				if (t.compareTo(now) == 1)
 				{
 					next_time = t;
@@ -59,10 +49,9 @@ public class ScheduleHelper
 				next_time = times.first();
 			}
 
-			next_schedule = LocalDateTime.of(day, next_time);
-			output = Date.from(next_schedule.atZone(ZoneId.systemDefault()).toInstant());
+			next_schedule = ZonedDateTime.of(day, next_time, ZoneId.systemDefault());
 		}
 
-		return output;
+		return next_schedule;
 	}
 }

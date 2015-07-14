@@ -2,7 +2,8 @@ package org.szernex.yabm2.command;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import org.szernex.yabm2.YABM;
+import org.szernex.yabm2.YABM2;
+import org.szernex.yabm2.util.ChatHelper;
 import org.szernex.yabm2.util.LogHelper;
 
 public class CommandStartBackup extends CommandBase
@@ -29,6 +30,7 @@ public class CommandStartBackup extends CommandBase
 	public void processCommand(ICommandSender sender, String[] args)
 	{
 		LogHelper.info(sender.getCommandSenderName() + " manually started a backup");
-		YABM.backupManager.startBackup();
+		ChatHelper.sendLocalizedUserChatMsg(sender, "commands.yabm2.startbackup.started", sender.getCommandSenderName());
+		YABM2.backupManager.startBackup();
 	}
 }

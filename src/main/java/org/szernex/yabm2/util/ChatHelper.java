@@ -39,4 +39,14 @@ public class ChatHelper
 			sender.addChatMessage(chat_component);
 		}
 	}
+
+	public static void sendLocalizedUserChatMsg(ICommandSender sender, String key, Object... args)
+	{
+		sendUserChatMsg(sender, getLocalizedMsg(key, args));
+	}
+
+	public static void sendLocalizedServerChatMsg(String key, Object... args)
+	{
+		sendServerChatMsg(getLocalizedMsg(key, args));
+	}
 }

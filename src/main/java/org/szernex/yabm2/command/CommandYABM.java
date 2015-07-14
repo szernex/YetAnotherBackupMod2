@@ -42,7 +42,7 @@ public class CommandYABM extends CommandBase
 	{
 		if (args.length == 0)
 		{
-			ChatHelper.sendUserChatMsg(sender, ChatHelper.getLocalizedMsg("commands.yabm.general.usage"));
+			ChatHelper.sendLocalizedUserChatMsg(sender, "commands.yabm2.general.usage");
 			return;
 		}
 
@@ -54,7 +54,7 @@ public class CommandYABM extends CommandBase
 		}
 		else
 		{
-			ChatHelper.sendUserChatMsg(sender, ChatHelper.getLocalizedMsg("commands.yabm.general.invalid_key"));
+			ChatHelper.sendLocalizedUserChatMsg(sender, "commands.yabm2.error.invalid_key");
 		}
 	}
 

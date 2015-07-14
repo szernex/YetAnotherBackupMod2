@@ -14,12 +14,12 @@ import org.szernex.yabm2.util.LogHelper;
 import java.io.File;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, acceptableRemoteVersions = "*")
-public class YABM
+public class YABM2
 {
 	public static final BackupManager backupManager = new BackupManager();
 
 	@Mod.Instance(Reference.MOD_ID)
-	public static YABM instance;
+	public static YABM2 instance;
 
 	public static File configFile = null;
 

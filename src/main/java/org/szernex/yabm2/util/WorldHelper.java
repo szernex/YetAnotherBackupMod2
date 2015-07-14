@@ -47,6 +47,7 @@ public class WorldHelper
 
 		LogHelper.info("Worlds saved");
 		LogHelper.info("World auto-save turned off");
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.autosave_off");
 	}
 
 	public static void enableWorldSaving()
@@ -66,6 +67,7 @@ public class WorldHelper
 		}
 
 		LogHelper.info("World auto-save turned on");
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.autosave_on");
 		saveFlags = null;
 	}
 }
