@@ -1,0 +1,11 @@
+v1.7.10-2.0.1
+* Prototype of the re-worked version
+* Threading has (hopefully) been optimized
+* Commands have been changed. Config can be reloaded during runtime using /yabm reloadconfig
+* Using only java.nio and java.time packages wherever possible for more flexibility
+* YABM2 now includes everything in the instance directory unless filtered in the blacklist setting
+
+TODO
+* Add FTP upload functionality
+* Add Mod Config Screen for SinglePlayer
+* Clean up/refactor helper classes
