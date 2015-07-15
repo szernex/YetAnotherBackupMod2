@@ -67,7 +67,7 @@ public class BackupManagingHelper
 		BackupFileVisitor fileVisitor = new BackupFileVisitor(pattern);
 		HashSet<Path> files = new HashSet<>();
 
-		LogHelper.debug("Checking directories for backups created today: %s %s", backup_dir, persistent_dir);
+		LogHelper.info("Checking directories for backups created today: %s %s", backup_dir, persistent_dir);
 		LogHelper.debug("Pattern used: " + pattern);
 
 		try
@@ -103,19 +103,17 @@ public class BackupManagingHelper
 		return true;
 	}
 
-	public static void consolidateBackups()
+	public static void consolidateBackups(int max_count, Path backup_dir)
 	{
-		int max_count = ConfigHandler.maxBackupCount;
-
 		if (max_count == 0)
 			return;
 
-		Path backup_dir = Paths.get(ConfigHandler.backupPath).toAbsolutePath().normalize();
+		backup_dir = backup_dir.toAbsolutePath().normalize();
 		String pattern = BackupCreationHelper.generateFileNameRegex();
 		BackupFileVisitor fileVisitor = new BackupFileVisitor(pattern);
 		TreeSet<Path> files = new TreeSet<>(new LastModifiedComparator());
 
-		LogHelper.debug("Gathering files for consolidation from backup directory " + backup_dir);
+		LogHelper.info("Gathering files for consolidation from backup directory " + backup_dir);
 		LogHelper.debug("Pattern used: " + pattern);
 
 		try
@@ -148,6 +146,6 @@ public class BackupManagingHelper
 			}
 		}
 
-		LogHelper.info("Deleted %d old backup(s)", delete_count);
+		LogHelper.info("Deleted %d old backup(s) in %s", delete_count, backup_dir);
 	}
 }

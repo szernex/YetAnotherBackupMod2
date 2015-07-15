@@ -1,3 +1,7 @@
+v1.7.10-2.0.2
+* Added maxPersistentCount option, behaves like maxBackupCount but for persistent backups
+* Tweaked logging messages
+
 v1.7.10-2.0.1
 * Prototype of the re-worked version
 * Threading has (hopefully) been optimized

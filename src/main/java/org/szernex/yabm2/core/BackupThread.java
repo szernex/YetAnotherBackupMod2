@@ -77,7 +77,10 @@ public class BackupThread extends Thread
 		Path target_file = target_dir.resolve(BackupCreationHelper.generateArchiveFileName(persistent));
 		Path world_path = root.resolve(DimensionManager.getCurrentSaveRootDirectory().toString()).normalize();
 
-		LogHelper.info("Backup info: Root: %s - World directory: %s - Target backup file: %s", root.toAbsolutePath(), world_path, target_file);
+		LogHelper.info("Backup info:");
+		LogHelper.info("  Root: " + root.toAbsolutePath());
+		LogHelper.info("  World directory: " + world_path);
+		LogHelper.info("  Target backup file: " + target_file);
 
 		try
 		{
@@ -94,7 +97,8 @@ public class BackupThread extends Thread
 
 
 		// consolidate old backups
-		BackupManagingHelper.consolidateBackups();
+		BackupManagingHelper.consolidateBackups(ConfigHandler.maxBackupCount, Paths.get(ConfigHandler.backupPath));
+		BackupManagingHelper.consolidateBackups(ConfigHandler.maxPersistentCount, Paths.get(ConfigHandler.persistentPath));
 
 
 		// finish up
