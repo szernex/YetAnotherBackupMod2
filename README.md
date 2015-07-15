@@ -4,6 +4,8 @@
 ## Important note for users of YetAnotherBackupMod v1.x
 YABM2 is a completely separate mod from YABM, therefor you will have to **remove YABM v1.x** before adding YABM2, otherwise you will end up with 2 mods making backups at possibly the same time!
 
+You also need to have **Java 8** installed in order to use this version of the mod.
+
 ## What is YABM(2)?
 YABM, or YetAnotherBackupMod, is a <a href="https://minecraft.net/">Minecraft</a> mod using the <a href="http://files.minecraftforge.net/">Forge framework</a>. It's only purpose is to provide a flexible yet easy to use way to plan backups of your Minecraft instance and is meant for both dedicated servers and SinglePlayer. Players on a server don't need to have YABM installed on their clients since it's a mod that just adds functionality (no blocks or items). Which means that if you are hosting a dedicated server using a pre-made ModPack you can still simply add YABM to your mods and your players don't have to do anything.
 
