@@ -1,3 +1,8 @@
+v1.7.10-2.0.3
+* Re-implemented FTP upload functionality
+* Added config options relating to FTP uploads
+* Minor tweaks and fixes
+
 v1.7.10-2.0.2
 * Added maxPersistentCount option, behaves like maxBackupCount but for persistent backups
 * Tweaked logging messages
@@ -10,6 +15,5 @@ v1.7.10-2.0.1
 * YABM2 now includes everything in the instance directory unless filtered in the blacklist setting
 
 TODO
-* Add FTP upload functionality
 * Add Mod Config Screen for SinglePlayer
 * Clean up/refactor helper classes

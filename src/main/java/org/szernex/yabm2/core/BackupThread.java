@@ -1,10 +1,13 @@
 package org.szernex.yabm2.core;
 
 import net.minecraftforge.common.DimensionManager;
+import org.apache.commons.net.ftp.FTPClient;
 import org.szernex.yabm2.handler.ConfigHandler;
 import org.szernex.yabm2.util.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -100,6 +103,19 @@ public class BackupThread extends Thread
 		BackupManagingHelper.consolidateBackups(ConfigHandler.maxBackupCount, Paths.get(ConfigHandler.backupPath));
 		BackupManagingHelper.consolidateBackups(ConfigHandler.maxPersistentCount, Paths.get(ConfigHandler.persistentPath));
 
+		// handle FTP upload
+		if (ConfigHandler.ftpEnabled)
+		{
+			if (ConfigHandler.ftpPersistentOnly)
+			{
+				if (!ConfigHandler.persistentBackups || persistent)
+					uploadFTP(target_file);
+			}
+			else
+			{
+				uploadFTP(target_file);
+			}
+		}
 
 		// finish up
 		finish();
@@ -118,5 +134,83 @@ public class BackupThread extends Thread
 		LogHelper.info("TASK FINISHED");
 		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.general.backup_finished");
 		backupLock.unlock();
+	}
+
+	private void uploadFTP(Path target_file)
+	{
+		LogHelper.info("Starting FTP upload");
+		ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.ftp.upload_start");
+
+		FTPClient client = new FTPClient();
+		String server = ConfigHandler.ftpServer;
+		int port = ConfigHandler.ftpPort;
+		String username = ConfigHandler.ftpUsername;
+		String password = ConfigHandler.ftpPassword;
+		Path location = Paths.get(ConfigHandler.ftpLocation);
+
+		try
+		{
+			LogHelper.info("Connecting to FTP Server %s:%d", server, port);
+			client.connect(server, port);
+
+			LogHelper.info("Authenticating with credentials.");
+			if (client.login(username, password))
+			{
+				LogHelper.info("Logged in.");
+				LogHelper.info("Entering passive mode.");
+				client.enterLocalPassiveMode();
+				client.setFileType(FTPClient.BINARY_FILE_TYPE);
+
+				LogHelper.info("Starting upload.");
+				InputStream input = new FileInputStream(target_file.toFile());
+				boolean success = client.storeFile(location.resolve(target_file.getFileName()).toString(), input);
+
+				input.close();
+
+				if (success)
+				{
+					LogHelper.info("FTP upload finished successfully.");
+					ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.ftp.upload_success");
+				}
+				else
+				{
+					LogHelper.warn("FTP upload failed.");
+					ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.ftp_upload_failed");
+
+					String[] replies = client.getReplyStrings();
+
+					for (String reply : replies)
+					{
+						LogHelper.warn("FTP server reply: %s", reply);
+					}
+				}
+			}
+			else
+			{
+				LogHelper.error("FTP authentication failed.");
+			}
+		}
+		catch (IOException ex)
+		{
+			LogHelper.error("Error during FTP upload: %s", ex.getMessage());
+			ChatHelper.sendLocalizedServerChatMsg("yabm2.backup.error.ftp_upload_error", ex.getMessage());
+			ex.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if (client.isConnected())
+				{
+					client.logout();
+					client.disconnect();
+				}
+			}
+			catch (IOException ex)
+			{
+				LogHelper.error("Error while closing FTP connection: %s", ex.getMessage());
+				ex.printStackTrace();
+			}
+		}
 	}
 }
