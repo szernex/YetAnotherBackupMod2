@@ -24,5 +24,5 @@ Behind the scenes a lot of things have changed too, but those are not that impor
 * YABM2 is now a bit more conscious about verbosing things, ie console spam should be less (most outputs are on DEBUG level now) and chat messages have been reduced to a minimum while still being informative.
  
 ### Functionality still missing from v1 (TBD)
-* FTP upload to remote locations
+~~* FTP upload to remote locations~~
 * Config menu (for SinglePlayer)
