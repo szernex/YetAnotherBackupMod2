@@ -40,7 +40,7 @@ minecraft {
     replaceIn "Reference.java"
     replace "@VERSION@", config.mod_version + "." + config.build_number
 
-    srgExtra "PK:org/apache/commons/net org/szernex/yabm2/commons-net"
+    srgExtra "PK: org/apache/commons/net org/szernex/yabm2/commons-net"
 }
 
 configurations {

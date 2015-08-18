@@ -113,7 +113,7 @@ public class BackupManagingHelper
 		BackupFileVisitor fileVisitor = new BackupFileVisitor(pattern);
 		TreeSet<Path> files = new TreeSet<>(new LastModifiedComparator());
 
-		LogHelper.info("Gathering files for consolidation from backup directory " + backup_dir);
+		LogHelper.debug("Gathering files for consolidation from backup directory " + backup_dir);
 		LogHelper.debug("Pattern used: " + pattern);
 
 		try

@@ -1,4 +1,7 @@
 v1.7.10-2.0.3
+* Added experimental "break" feature (can be toggled in config). If activated then backup creation process takes a 4 second break every 10 seconds to give the game a chance to catch up
+
+v1.7.10-2.0.3
 * Re-implemented FTP upload functionality
 * Added config options relating to FTP uploads
 * Minor tweaks and fixes

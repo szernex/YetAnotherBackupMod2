@@ -28,6 +28,7 @@ public class ConfigHandler
 	public static int ftpPort =                 21;
 	public static String ftpLocation =          "yabm2_backups";
 	public static boolean ftpPersistentOnly =   true;
+	public static boolean breaksDuringBackup =  false;
 
 	public static void init(File file)
 	{
@@ -65,6 +66,7 @@ public class ConfigHandler
 		ftpPort = configuration.getInt("ftpPort", category, ftpPort, 1, Integer.MAX_VALUE, "The FTP server port to use.");
 		ftpLocation = configuration.getString("ftpLocation", category, ftpLocation, "The remote directory to upload backups to.");
 		ftpPersistentOnly = configuration.getBoolean("ftpPersistentOnly", category, ftpPersistentOnly, "Whether to only upload persistent backups or everything.\nIf persistentBackups is set to false regular backups will be uploaded instead.");
+		breaksDuringBackup = configuration.getBoolean("breaksDuringBackup", category, breaksDuringBackup, "Experimental feature. Pauses the backup creation task every few seconds to give the game time to catch up.");
 
 		if (configuration.hasChanged())
 		{

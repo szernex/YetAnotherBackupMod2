@@ -114,6 +114,10 @@ public class BackupCreationHelper
 		FileOutputStream output = new FileOutputStream(target.toFile());
 		ZipOutputStream zip = new ZipOutputStream(output);
 		HashSet<Path> files = new HashSet<>(gatherFiles(root, blacklistMatchers));
+		boolean breaks = ConfigHandler.breaksDuringBackup;
+		long last_break = System.currentTimeMillis();
+		long break_interval = 10 * 1000;
+		long break_duration = 4 * 1000;
 
 		LogHelper.debug("Adding world save");
 		files.addAll(gatherFiles(world_path, null));
@@ -142,6 +146,30 @@ public class BackupCreationHelper
 
 			zip.closeEntry();
 			input.close();
+
+			if (breaks)
+			{
+				long current_time = System.currentTimeMillis();
+
+				if (current_time >= (last_break + break_interval))
+				{
+					LogHelper.info("Taking a break for %dms", break_duration);
+
+					try
+					{
+						Thread.sleep(break_duration);
+					}
+					catch (InterruptedException ex)
+					{
+						LogHelper.fatal("Thread got interrupted during backup creation. This is a critical error!");
+						ex.printStackTrace();
+					}
+					finally
+					{
+						last_break = System.currentTimeMillis();
+					}
+				}
+			}
 		}
 
 		zip.close();
