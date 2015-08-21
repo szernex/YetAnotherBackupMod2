@@ -1,5 +1,5 @@
 v1.7.10-2.0.4
-* Added experimental "break" feature (can be toggled in config). If activated then backup creation process takes a 4 second break every 10 seconds to give the game a chance to catch up
+* Added backup pause functionality. Settings can be found in the config (pauseInterval and pauseDuration). If pauseInterval is set to anything > 0 the process of creating the backup archive will be paused every X seconds for pauseDuration seconds which is supposed to let the game catch up a bit during big backups.
 
 v1.7.10-2.0.3
 * Re-implemented FTP upload functionality
