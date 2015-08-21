@@ -14,7 +14,7 @@ public class ConfigHandler
 	public static String[] blacklist =          new String[]{".*logs.*", ".*backups.*"};
 	public static int backupInterval =          180;
 	public static String[] backupSchedule =     new String[]{};
-	public static int compressionLevel =        9;
+	public static int compressionLevel =        4;
 	public static String backupPrefix =         "backup";
 	public static String backupPath =           "../backups";
 	public static boolean persistentBackups =   true;
@@ -28,7 +28,8 @@ public class ConfigHandler
 	public static int ftpPort =                 21;
 	public static String ftpLocation =          "yabm2_backups";
 	public static boolean ftpPersistentOnly =   true;
-	public static boolean breaksDuringBackup =  false;
+	public static int pauseInterval =           0;
+	public static int pauseDuration =           3;
 
 	public static void init(File file)
 	{
@@ -66,7 +67,8 @@ public class ConfigHandler
 		ftpPort = configuration.getInt("ftpPort", category, ftpPort, 1, Integer.MAX_VALUE, "The FTP server port to use.");
 		ftpLocation = configuration.getString("ftpLocation", category, ftpLocation, "The remote directory to upload backups to.");
 		ftpPersistentOnly = configuration.getBoolean("ftpPersistentOnly", category, ftpPersistentOnly, "Whether to only upload persistent backups or everything.\nIf persistentBackups is set to false regular backups will be uploaded instead.");
-		breaksDuringBackup = configuration.getBoolean("breaksDuringBackup", category, breaksDuringBackup, "Experimental feature. Pauses the backup creation task every few seconds to give the game time to catch up.");
+		pauseInterval = configuration.getInt("pauseInterval", category, pauseInterval, 0, Integer.MAX_VALUE, "How many seconds to wait between pausing the backup creation.\nSet to 0 to disable pauses.");
+		pauseDuration = configuration.getInt("pauseDuration", category, pauseDuration, 1, 100, "How many seconds to pause backup creation. Has no effect if pauseInterval = 0.");
 
 		if (configuration.hasChanged())
 		{
