@@ -48,6 +48,7 @@ public class YABM2
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent event)
 	{
+		FMLCommonHandler.instance().bus().unregister(backupManager);
 		backupManager.stop();
 	}
 }
